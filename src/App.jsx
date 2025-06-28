@@ -23,8 +23,8 @@ function deriveActivePlayer(gameTurns) {
     return currentPlayer;
 }
 
-function deriveGameBoard(gameTurns){
-    let gameBoard = [...INITIAL_GAME_BOARD.map(array => [...array])];
+function deriveGameBoard(gameTurns) {
+    let gameBoard = [...INITIAL_GAME_BOARD.map((array) => [...array])];
     for (let turn of gameTurns) {
         const {square, player} = turn;
         const {row, col} = square;
@@ -33,20 +33,21 @@ function deriveGameBoard(gameTurns){
     return gameBoard;
 }
 
-function derivedWinner(gameBoard, players){
+function derivedWinner(gameBoard, players) {
     let winner;
     for (let combination of WINNING_COMBINATIONS) {
         const firstSquareSymbol = gameBoard[combination[0].row][combination[0].col];
         const secondSquareSymbol = gameBoard[combination[1].row][combination[1].col];
         const thirdSquareSymbol = gameBoard[combination[2].row][combination[2].col];
 
-        if(firstSquareSymbol && firstSquareSymbol === secondSquareSymbol && firstSquareSymbol === thirdSquareSymbol) {
+        if (firstSquareSymbol && firstSquareSymbol === secondSquareSymbol && firstSquareSymbol === thirdSquareSymbol) {
             winner = players[firstSquareSymbol];
         }
     }
 
     return winner;
 }
+
 function App() {
     const [players, setPlayers, setState] = useState(PLAYERS);
     const [gameTurns, setGameTurns] = useState([]);
@@ -57,17 +58,17 @@ function App() {
 
     function handleSelectSquare(rowIndex, colIndex) {
         setGameTurns((prevTurns) => {
-           const currentPlayer = deriveActivePlayer(prevTurns);
+            const currentPlayer = deriveActivePlayer(prevTurns);
             const updatedTurns = [{square: {row: rowIndex, col: colIndex}, player: currentPlayer}, ...prevTurns];
             return updatedTurns;
         });
     }
 
-    function handleRestart(){
+    function handleRestart() {
         setGameTurns([]);
     }
 
-    function handlePlayerNameChange(symbol, newName){
+    function handlePlayerNameChange(symbol, newName) {
         setPlayers(prevPlayers => {
             return {
                 ...prevPlayers,
@@ -80,10 +81,12 @@ function App() {
         <main>
             <div id="game-container">
                 <ol id="players" data-testid="players" className="highlight-player">
-                    <Player initialName={PLAYERS.X} symbol="X" isActive={activePlayer === "X"} onChangeName={handlePlayerNameChange}/>
-                    <Player initialName={PLAYERS.O} symbol="O" isActive={activePlayer === "O"}/>
+                    <Player initialName={PLAYERS.X} symbol="X" isActive={activePlayer === "X"}
+                            onChangeName={handlePlayerNameChange}/>
+                    <Player initialName={PLAYERS.O} symbol="O" isActive={activePlayer === "O"}
+                            onChangeName={handlePlayerNameChange}/>
                 </ol>
-                {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestart}/>}
+                {(winner || hasDraw) && (<GameOver winner={winner} onRestart={handleRestart}/>)}
                 <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard}/>
             </div>
 
